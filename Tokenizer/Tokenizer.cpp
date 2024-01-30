@@ -59,14 +59,14 @@ void Tokenizer::makeTokens(const std::string& line)
         {
             if (line[i] == ' ' || line[i] == '\n')
             {
-                m_tokens.push_back(new Token(token_name));
+                m_tokens.push_back(new Token(token_name, tokenType(token_name)));
                 token_name = "";
                 continue;
             }
 
             if (std::isalnum(token_name.back()) != std::isalnum(line[i]))
             {
-                m_tokens.push_back(new Token(token_name));
+                m_tokens.push_back(new Token(token_name, tokenType(token_name)));
                 token_name = "";
             }
 
@@ -81,8 +81,18 @@ void Tokenizer::makeTokens(const std::string& line)
 
     if (!token_name.empty())
     {
-        m_tokens.push_back(new Token(token_name));
+        m_tokens.push_back(new Token(token_name, tokenType(token_name)));
     } 
+}
+
+std::string Tokenizer::tokenType(const std::string& token)
+{
+    if (token_types.find(token) != token_types.end())
+    {
+        return token_types[token];
+    }
+
+    return "variable";
 }
 
 void Tokenizer::printTokens() const
