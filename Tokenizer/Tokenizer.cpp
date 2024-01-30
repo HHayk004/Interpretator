@@ -2,21 +2,21 @@
 #include <iostream>
 #include <cctype>
 
-Token::Token(const std::string& name, const std::string& type) : m_name(name), m_type(type) {}
+Token::Token(const std::string& name, TokenType type) : m_name(name), m_type(type) {}
 
 void Token::setName(const std::string& str) {
     m_name = str;
 }
 
-void Token::setType(const std::string& str) {
-    m_type = str;
+void Token::setType(TokenType type) {
+    m_type = type;
 }
 
 std::string Token::getName() const {
     return m_name;
 }
 
-std::string Token::getType() const {
+TokenType Token::getType() const {
     return m_type;
 }
 
@@ -32,10 +32,6 @@ Tokenizer::Tokenizer(const char* str) : m_file(str, std::ios::in)
 Tokenizer::~Tokenizer()
 {
     m_file.close();
-    for (int i = 0; i < m_tokens.size(); ++i)
-    {
-        delete m_tokens[i];
-    }
 }
 
 void Tokenizer::readFile()
@@ -59,14 +55,14 @@ void Tokenizer::makeTokens(const std::string& line)
         {
             if (line[i] == ' ' || line[i] == '\n')
             {
-                m_tokens.push_back(new Token(token_name, tokenType(token_name)));
+                m_tokens.push_back(Token(token_name, tokenType(token_name)));
                 token_name = "";
                 continue;
             }
 
             if (std::isalnum(token_name.back()) != std::isalnum(line[i]))
             {
-                m_tokens.push_back(new Token(token_name, tokenType(token_name)));
+                m_tokens.push_back(Token(token_name, tokenType(token_name)));
                 token_name = "";
             }
 
@@ -81,24 +77,24 @@ void Tokenizer::makeTokens(const std::string& line)
 
     if (!token_name.empty())
     {
-        m_tokens.push_back(new Token(token_name, tokenType(token_name)));
+        m_tokens.push_back(Token(token_name, tokenType(token_name)));
     } 
 }
 
-std::string Tokenizer::tokenType(const std::string& token)
+TokenType Tokenizer::tokenType(const std::string& token)
 {
     if (token_types.find(token) != token_types.end())
     {
         return token_types[token];
     }
 
-    return "variable";
+    return TokenType::Identifier;
 }
 
 void Tokenizer::printTokens() const
 {
     for (int i = 0; i < m_tokens.size(); ++i)
     {
-        std::cout << m_tokens[i]->getName() << ' ' << m_tokens[i]->getType() << std::endl;
+        std::cout << m_tokens[i].getName() << ' ' << static_cast<int>(m_tokens[i].getType()) << std::endl;
     }
 }
