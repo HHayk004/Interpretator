@@ -20,6 +20,28 @@ TokenType Token::getType() const {
     return m_type;
 }
 
+void Token::printToken() const
+{
+    std::cout << m_tokens[i].getName() << ' ' << static_cast<int>(m_tokens[i].getType());
+}
+
+bool Token::isType()
+{
+    return m_type == TokenType::Bool || m_type == TokenType::Char || m_type == TokenType::Int 
+            || m_type == TokenType::Double || m_type == String;
+}
+
+bool Token::isIdentifier()
+{
+    return m_type == Identifier;
+}
+
+bool isOperator()
+{
+    return m_type == TokenType::Plus || m_type == TokenType::Minus || m_type == TokenType::Multiply
+            || m_type == TokenType::Division;
+}
+
 Tokenizer::Tokenizer(const char* str) : m_file(str, std::ios::in)
 {
     if (!m_file.is_open())
@@ -81,7 +103,7 @@ void Tokenizer::makeTokens(const std::string& line)
     } 
 }
 
-TokenType Tokenizer::tokenType(const std::string& token)
+TokenType Tokenizer::tokenType(const std::string& token) const
 {
     if (token_types.find(token) != token_types.end())
     {
@@ -95,6 +117,7 @@ void Tokenizer::printTokens() const
 {
     for (int i = 0; i < m_tokens.size(); ++i)
     {
-        std::cout << m_tokens[i].getName() << ' ' << static_cast<int>(m_tokens[i].getType()) << std::endl;
+        m_tokens[i].printToken();
+        std::cout << std::endl;
     }
 }

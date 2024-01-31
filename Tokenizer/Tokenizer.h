@@ -7,7 +7,8 @@ enum class TokenType {
     Bool, Char, Int, Double, String, // basic types
     Plus, Minus, Multiply, Division, // arithmetic operators
     Assignment,
-    Condition, Cycle, Cout,
+    Condition, Cycle, 
+    Cout,
     CoutFlow,
     Equal, SmallEqual, BigEqual, Small, Big, // comparison operators
     ArrayOpen, ArrayClose, ScopeOpen, ScopeClose, BraceOpen, BraceClose, // braces
@@ -22,13 +23,19 @@ class Token {
 
     public:
         Token(const std::string& name = "", TokenType type = TokenType::Identifier);
-        virtual ~Token() = default;
+        ~Token() = default;
 
         void setName(const std::string& str);
         void setType(TokenType str);
 
         std::string getName() const;
         TokenType getType() const;
+
+        void printToken() const;
+
+        static bool isType();
+        static bool isIdentifier();
+        static bool isOperator();
 };
 
 class Tokenizer {
@@ -38,7 +45,7 @@ class Tokenizer {
 
         void makeTokens(const std::string& line);
 		
-	    TokenType tokenType(const std::string& token);
+	    TokenType tokenType(const std::string& token) const;
 
         void printTokens() const;
 
