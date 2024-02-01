@@ -2,7 +2,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "Tokenizer.h"
+#include "Tokenizer/Tokenizer.h"
+#include "Parser/Parser.h"
 
 int main(int argc, char* argv[])
 {
@@ -14,4 +15,6 @@ int main(int argc, char* argv[])
 
     Tokenizer tokenizer(argv[1]);
     tokenizer.readFile();
+    Parser parser;
+    parser.run(tokenizer.getTokens());
 }

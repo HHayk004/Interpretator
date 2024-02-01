@@ -1,78 +1,74 @@
 #include "../Tokenizer/Tokenizer.h"
 #include "Parser.h"
+#include <iostream>
+#include <string>
 #include <vector>
 
-Statement::Statement(const std::vector<token>& tokens, const std::string& type) : m_tokens(tokens), type(m_type) {}
+Statement::Statement(const std::vector<Token>& tokens) : m_tokens(tokens) {}
 
-void Statement::setTokens(const std::vector<token>& tokens)
+void Statement::setTokens(const std::vector<Token>& tokens)
 {
     m_tokens = tokens;
 }
 
-void Statement::setType(StatementType type)
-{
-    m_type = type;
-}
-.
-std::vector<tokens> getTokens() const
+std::vector<Token> Statement::getTokens() const
 {
     return m_tokens;
 }
 
-StatementType Statement::getType() const
-{
-    return m_type;
-}
-
-void Statement::PrintStatement() const
+void Statement::printStatement() const
 {
     for (int i = 0; i < m_tokens.size(); ++i)
     {
-        m_tokens[i].printToken() << ' ';
+        m_tokens[i].printToken();
+        std::cout << ' ';
     }
-    std::cout << static_cast<int>(m_type);
+
+    std::cout << std::endl;
 }
 
-void Statement::makeStatements(const std::vector<tokens>& tokens)
+void Parser::run(const std::vector<Token>& tokens)
 {
-    std::vector<token> tmp_statement;
+    std::vector<Token> tmp_statement;
     for (int i = 0; i < tokens.size(); ++i)
     {
-        if (tokens[i].getType == TokenType::Semicolon)
+        if (tokens[i].getType() == TokenType::Semicolon)
         {
-            Statement statement(tmp_statement, statementTypeFunc(tmp_statement));
-            if (StatementCheck(statment))
-            {
-                m_tokens.push_back(statement);
-                statement.clear();
-            }
-
-            else
+            Statement statement(tmp_statement);
+            if (!statementImpl(statement))
             {
                 statement.printStatement();
                 std::cerr << " is invalid statement:\n";
                 exit(-1);
             }
+
+            tmp_statement.clear();
+        }
+
+        else
+        {
+            tmp_statement.push_back(tokens[i]);
         }
     }
 }
 
-bool Parser::StatementCheck(const Statement& statement) const
+bool Parser::statementImpl(const Statement& statement)
 {
-    std::vector<Token> tokens = statement.getTokens()
-    if (token[0].getType() == TokenType::Type)
+    std::vector<Token> tokens = statement.getTokens();
+
+    if (tokens[0].isType())
     {
-        return DeclarationCheck(tokens);
+        return declarationImpl(tokens);
     }
 
-    else if (token[0].getType == TokenType::Identifier)
+    else if (tokens[0].getType() == TokenType::Identifier)
     {
-        return ArithmeticCheck(tokens);
+        return arithmeticImpl(tokens);
     }
 
-    else if (tokens[0].getType == TokenType::Cout)
+    else if (tokens[0].getType() == TokenType::Cout)
     {
-        return coutCheck(tokens);
+        return coutImpl(tokens);
     }
 
     else
@@ -81,7 +77,7 @@ bool Parser::StatementCheck(const Statement& statement) const
     }
 }
 
-bool Parser::DeclarationCheck(const std::vector<Token>& tokens)
+bool Parser::declarationImpl(const std::vector<Token>& tokens)
 {
     if (tokens.size() == 1 || tokens[1].getType() != TokenType::Identifier)
     {
@@ -97,30 +93,28 @@ bool Parser::DeclarationCheck(const std::vector<Token>& tokens)
         
         for (int i = 3; i < tokens.size(); i += 2)
         {
-            if (token.getType() == TokenType::Identifier && // type check)
-            {
-                //symbol table check;
-            }
-
-            else if (token.getType() == TokenType::NumberLiteral && 
-                        token[0] == TokenType::String)
-            {
-                return false;
-            }
-
-            else
-            {
-                return false;
-            }
+	    
         }
-
-        for (int i = 4; i < tokens.size(); i += 2)
-        {
-            if (!tokens[i].isOperator())
-            {
-                return false;
-            }
-        }
-
     }
+}
+
+bool Parser::arithmeticImpl(const std::vector<Token>& tokens)
+{
+
+}
+
+bool Parser::coutImpl(const std::vector<Token>& tokens)
+{
+	if (tokens.size() != 3 || tokens[1].getType() != TokenType::CoutFlow)
+    {
+        return false;
+    }
+
+    if (tokens[2].getType() == TokenType::NumberLiteral)
+    {
+        std::cout << stod(tokens[2].getName()) << std::endl;
+        return true;
+    }
+
+    return false;
 }

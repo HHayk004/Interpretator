@@ -1,3 +1,6 @@
+#ifndef TOKENIZER_H
+#define TOKENIZER_H
+
 #include <string>
 #include <fstream>
 #include <vector>
@@ -46,7 +49,24 @@ class Tokenizer {
     private:
         std::fstream m_file;
         std::vector<Token> m_tokens;
-
+        
+        const std::unordered_map<std::string, TokenType> token_types = {
+            {"int", TokenType::Int}, {"double", TokenType::Double}, {"char",  TokenType::Char}, {"bool", TokenType::Bool}, {"string", TokenType::String},
+            {"'", TokenType::Quote}, {"\"", TokenType::DoubleQuote},
+            {"if", TokenType::Condition}, {"while", TokenType::Cycle}, {"std::cout", TokenType::Cout},
+            {"=", TokenType::Assignment}, 
+            {"+", TokenType::Plus}, {"-", TokenType::Minus}, 
+            {"/", TokenType::Division}, {"*", TokenType::Multiply},
+            {"==", TokenType::Equal}, {"<=", TokenType::SmallEqual}, {">=", TokenType::BigEqual},
+            {"<", TokenType::Small}, {">", TokenType::Big},
+            {"cout", TokenType::Cout},
+            {"<<", TokenType::CoutFlow},
+            {"[", TokenType::ArrayOpen}, {"]", TokenType::ArrayClose},
+            {"{", TokenType::ScopeOpen}, {"}", TokenType::ScopeClose},
+            {"(", TokenType::BraceOpen}, {")", TokenType::BraceClose},
+            {";", TokenType::Semicolon}
+        };
+        
         void makeTokens(const std::string& line);
 		
 	    TokenType tokenType(const std::string& token) const;
@@ -57,22 +77,8 @@ class Tokenizer {
         Tokenizer(const char* str);
         ~Tokenizer();
 
-        void readFile();
+	    std::vector<Token> getTokens() const;
 
-    public:
-        std::unordered_map<std::string, TokenType> token_types = {
-            {"int", TokenType::Int}, {"double", TokenType::Double}, {"char",  TokenType::Char}, {"bool", TokenType::Bool}, {"string", TokenType::String},
-            {"'", TokenType::Quote}, {"\"", TokenType::DoubleQuote},
-            {"if", TokenType::Condition}, {"while", TokenType::Cycle}, {"std::cout", TokenType::Cout},
-            {"=", TokenType::Assignment}, 
-            {"+", TokenType::Plus}, {"-", TokenType::Minus}, 
-            {"/", TokenType::Division}, {"*", TokenType::Multiply},
-            {"==", TokenType::Equal}, {"<=", TokenType::SmallEqual}, {">=", TokenType::BigEqual},
-            {"<", TokenType::Small}, {">", TokenType::Big},
-            {"<<", TokenType::CoutFlow},
-            {"[", TokenType::ArrayOpen}, {"]", TokenType::ArrayClose},
-            {"{", TokenType::ScopeOpen}, {"}", TokenType::ScopeClose},
-            {"(", TokenType::BraceOpen}, {")", TokenType::BraceClose},
-            {";", TokenType::Semicolon}
-        };
+        void readFile();
 };
+#endif
