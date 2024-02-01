@@ -28,13 +28,16 @@ class Statement {
 class Parser {
     private:
         std::vector<Statements> m_statemets;
+        static bool statementCheck(const Statement& statement);
+        
+        static bool delcarationCheck(const std::vector<Token>& tokens);
+        static bool arithmeticCheck(const std::vector<token>& tokens);
+        static bool coutCheck(const std::vector<token>& tokens);
 
     public:
         ~Parser() = default;
 
         makeStatements(const std::vector<Tokens>& tokens);
-
-        static bool statementCheck(Statement& statement);
 
         StatementType statementTypeFunc(const std::vector<Tokens>& tokens) const;
 

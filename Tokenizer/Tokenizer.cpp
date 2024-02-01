@@ -1,5 +1,6 @@
 #include "Tokenizer.h"
 #include <iostream>
+#include <string>
 #include <cctype>
 
 Token::Token(const std::string& name, TokenType type) : m_name(name), m_type(type) {}
@@ -25,18 +26,18 @@ void Token::printToken() const
     std::cout << m_tokens[i].getName() << ' ' << static_cast<int>(m_tokens[i].getType());
 }
 
-bool Token::isType()
+bool Token::isType() const
 {
     return m_type == TokenType::Bool || m_type == TokenType::Char || m_type == TokenType::Int 
             || m_type == TokenType::Double || m_type == String;
 }
 
-bool Token::isIdentifier()
+bool Token::isIdentifier() const
 {
     return m_type == Identifier;
 }
 
-bool isOperator()
+bool isOperator() const
 {
     return m_type == TokenType::Plus || m_type == TokenType::Minus || m_type == TokenType::Multiply
             || m_type == TokenType::Division;
@@ -110,7 +111,26 @@ TokenType Tokenizer::tokenType(const std::string& token) const
         return token_types[token];
     }
 
-    return TokenType::Identifier;
+    if (std::isalpha(token[0]))
+    {
+        return TokenType::Identifier;
+    }
+
+    if ('0' <= token[0] && token[0] <= '9')
+    {
+        try
+        {
+            stoi(token);
+            return TokenType::NumberLiteral;
+        }
+
+        catch(std::invalid_argument const& ex)
+        {
+            return TokenType::stringLiteral;
+        }
+    }
+
+    return TokenType::None;
 }
 
 void Tokenizer::printTokens() const

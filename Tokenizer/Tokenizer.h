@@ -5,6 +5,8 @@
 
 enum class TokenType {
     Bool, Char, Int, Double, String, // basic types
+    NumberLiteral, StringLiteral, // literals
+    Quote, DoubleQuote,
     Plus, Minus, Multiply, Division, // arithmetic operators
     Assignment,
     Condition, Cycle, 
@@ -13,7 +15,8 @@ enum class TokenType {
     Equal, SmallEqual, BigEqual, Small, Big, // comparison operators
     ArrayOpen, ArrayClose, ScopeOpen, ScopeClose, BraceOpen, BraceClose, // braces
     Semicolon,
-    Identifier
+    Identifier,
+    None // invalid token
 };
 
 class Token {
@@ -33,9 +36,10 @@ class Token {
 
         void printToken() const;
 
-        static bool isType();
-        static bool isIdentifier();
-        static bool isOperator();
+        bool isType() const;
+        bool isLiteral() const;
+        bool isIdentifier() const;
+        bool isOperator() const;
 };
 
 class Tokenizer {
@@ -58,6 +62,7 @@ class Tokenizer {
     public:
         std::unordered_map<std::string, TokenType> token_types = {
             {"int", TokenType::Int}, {"double", TokenType::Double}, {"char",  TokenType::Char}, {"bool", TokenType::Bool}, {"string", TokenType::String},
+            {"'", TokenType::Quote}, {"\"", TokenType::DoubleQuote},
             {"if", TokenType::Condition}, {"while", TokenType::Cycle}, {"std::cout", TokenType::Cout},
             {"=", TokenType::Assignment}, 
             {"+", TokenType::Plus}, {"-", TokenType::Minus}, 

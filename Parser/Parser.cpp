@@ -57,19 +57,70 @@ void Statement::makeStatements(const std::vector<tokens>& tokens)
     }
 }
 
-bool Parser::StatementCheck(Statement& statement) const
+bool Parser::StatementCheck(const Statement& statement) const
 {
     std::vector<Token> tokens = statement.getTokens()
-    int index = 0;
-    if (tokens.size <= 2)
+    if (token[0].getType() == TokenType::Type)
+    {
+        return DeclarationCheck(tokens);
+    }
+
+    else if (token[0].getType == TokenType::Identifier)
+    {
+        return ArithmeticCheck(tokens);
+    }
+
+    else if (tokens[0].getType == TokenType::Cout)
+    {
+        return coutCheck(tokens);
+    }
+
+    else
+    {
+        return false;
+    }
+}
+
+bool Parser::DeclarationCheck(const std::vector<Token>& tokens)
+{
+    if (tokens.size() == 1 || tokens[1].getType() != TokenType::Identifier)
     {
         return false;
     }
 
-    if (tokens[0].isType())
+    if (tokens.size() > 2)
     {
-        index = 1;
-    }
+        if (tokens[2].getType() != TokenType::Assignment)
+        {
+            return false;
+        }
+        
+        for (int i = 3; i < tokens.size(); i += 2)
+        {
+            if (token.getType() == TokenType::Identifier && // type check)
+            {
+                //symbol table check;
+            }
 
-    for (int i = index; i < tokens.size(); ++i)
+            else if (token.getType() == TokenType::NumberLiteral && 
+                        token[0] == TokenType::String)
+            {
+                return false;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+
+        for (int i = 4; i < tokens.size(); i += 2)
+        {
+            if (!tokens[i].isOperator())
+            {
+                return false;
+            }
+        }
+
+    }
 }
